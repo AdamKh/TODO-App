@@ -5,7 +5,6 @@ import { formatDistanceToNow } from 'date-fns'
 
 export default function Task({ label, status='', onEdit=false, created }) {
     const timeAgo = formatDistanceToNow(created, { includeSeconds: true });
-    const inputEdit = onEdit ? <input  type="text" className="edit" value={label} /> : '';
   
     return (
       <>
@@ -21,7 +20,7 @@ export default function Task({ label, status='', onEdit=false, created }) {
         <button type="button" className="icon icon-destroy" aria-label="destroy" />
       </div>
       
-      {inputEdit}
+      {onEdit ? <input  type="text" className="edit" value={label} /> : ''}
       </>
     )
   }
