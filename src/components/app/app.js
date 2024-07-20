@@ -6,11 +6,7 @@ import Footer from '../footer';
 
 export default class App extends Component {
   state = {
-    taskList: [
-      { label: 'Completed Task', completed: false, onEdit: false, id: 1 },
-      { label: 'Editing task', completed: false, onEdit: false, id: 2 },
-      { label: 'Active Task', completed: false, onEdit: false, id: 3 },
-    ]
+    taskList: []
   }
 
   onCheckClick = (id) => {
@@ -61,7 +57,18 @@ export default class App extends Component {
   }
 
   addItem = (label) => {
-    console.log(label);
+    this.setState(({ taskList }) => {
+      const key = Math.random().toString(36).slice(2);
+
+      const newArr = [
+        ...taskList,
+        { label: label, completed: false, onEdit: false, id: key }
+      ];
+
+      return {
+        taskList: newArr
+      };
+    });
   }
 
   render() {
