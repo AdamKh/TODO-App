@@ -1,4 +1,8 @@
 
+.hidden {
+    display: none;
+}
+
 .todo-list li.editing .view {
     display: none;
 }
