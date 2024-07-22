@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './new-task-form.css';
 
 export default class NewTaskForm extends Component {
@@ -6,12 +7,20 @@ export default class NewTaskForm extends Component {
     label: ''
   }
 
+  static defaultProps = {
+    addItem: () => {},
+  }
+  
+  static propTypes = {
+    addItem: PropTypes.func,
+  }
+
   render() {
     const { addItem } = this.props;
 
     const onSubmidHandler = (e) => {
       e.preventDefault();
-      (this.state.label != '') && addItem(this.state.label);
+      (this.state.label !== '') && addItem(this.state.label);
       this.setState({label: ''});
     }
   

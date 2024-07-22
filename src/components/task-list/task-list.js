@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import './task-list.css';
+
 import Task from '../task';
 
 export default function TaskList({taskList, onDeleteClick, onEditClick, onCheckClick, changeLabel}) {
@@ -23,4 +25,26 @@ export default function TaskList({taskList, onDeleteClick, onEditClick, onCheckC
       {elements}
     </ul>
   );
+}
+
+TaskList.defaultProps = {
+  taskList: [],
+  completed: false,
+  editing: false,
+  created: new Date(),
+  onDeleteClick: () => {},
+  onEditClick: () => {},
+  changeLabel: () => {},
+  onCheckClick: () => {},
+}
+
+TaskList.propTypes = {
+  taskList: PropTypes.array,
+  completed: PropTypes.bool,
+  editing: PropTypes.bool,
+  created: PropTypes.object,
+  onDeleteClick: PropTypes.func,
+  onEditClick: PropTypes.func,
+  changeLabel: PropTypes.func,
+  onCheckClick: PropTypes.func,
 }

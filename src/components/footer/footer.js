@@ -1,6 +1,8 @@
 import React from 'react';
-import TaskFilter from '../task-filter'
+import PropTypes from 'prop-types'
 import './footer.css';
+
+import TaskFilter from '../task-filter'
 
 export default function Footer({taskLeftCount, onClearCompleted, onFilterChange, filter}) {
   return (
@@ -12,3 +14,16 @@ export default function Footer({taskLeftCount, onClearCompleted, onFilterChange,
   );
 }
 
+Footer.defaultProps = {
+  taskLeftCount: 0,
+  onClearCompleted: () => {},
+  onFilterChange: () => {},
+  filter: 'all'
+}
+
+TaskFilter.propTypes = {
+  taskLeftCount: PropTypes.number,
+  onClearCompleted: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  filter: PropTypes.string,
+}

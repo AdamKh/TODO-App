@@ -1,19 +1,40 @@
 import React, { Component } from 'react';
-import './task.css';
+import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
+import './task.css';
 
 export default class Task extends Component {
   state = {
     label: this.props.label
   }
 
+  static defaultProps = {
+    completed: false,
+    editing: false,
+    created: new Date(),
+    onDeleteClick: () => {},
+    onEditClick: () => {},
+    changeLabel: () => {},
+    onCheckClick: () => {},
+  }
+
+  static propTypes = {
+    completed: PropTypes.bool,
+    editing: PropTypes.bool,
+    created: PropTypes.object,
+    onDeleteClick: PropTypes.func,
+    onEditClick: PropTypes.func,
+    changeLabel: PropTypes.func,
+    onCheckClick: PropTypes.func,
+  }
+
   render() {
-    const { id, created, onDeleteClick, onEditClick, onCheckClick, completed, editing } = this.props;
+    const { id, created, onDeleteClick, onEditClick, changeLabel, onCheckClick, completed, editing } = this.props;
     const timeAgo = formatDistanceToNow(created, { includeSeconds: true });
 
     const onSubmitHandler = (e) => {
       e.preventDefault();
-      this.props.changeLabel(id, this.state.label);
+      changeLabel(id, this.state.label);
     };
 
     const inputChangeHandler = (e) => {
