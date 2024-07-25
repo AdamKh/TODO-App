@@ -6,19 +6,6 @@ import TaskList from '../task-list'
 import Footer from '../footer'
 
 export default class App extends Component {
-  static taskFilter = (filter, items) => {
-    switch (filter) {
-      case 'all':
-        return items
-      case 'active':
-        return items.filter((item) => !item.completed)
-      case 'completed':
-        return items.filter((item) => item.completed)
-      default:
-        return items
-    }
-  }
-
   constructor() {
     super()
     this.state = {
@@ -114,10 +101,24 @@ export default class App extends Component {
     this.setState({ filter })
   }
 
+  taskFilter = (filter) => {
+    const { taskList } = this.state
+    switch (filter) {
+      case 'all':
+        return taskList
+      case 'active':
+        return taskList.filter((item) => !item.completed)
+      case 'completed':
+        return taskList.filter((item) => item.completed)
+      default:
+        return taskList
+    }
+  }
+
   render() {
     const { taskList, filter } = this.state
     const taskLeftCount = taskList.filter((task) => !task.completed).length
-    const visibleItems = App.taskFilter(filter, taskList)
+    const visibleItems = this.taskFilter(filter)
 
     return (
       <section className="todoapp">

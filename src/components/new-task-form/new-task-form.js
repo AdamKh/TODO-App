@@ -10,27 +10,28 @@ export default class NewTaskForm extends Component {
     }
   }
 
+  onSubmidHandler = (e, addItem) => {
+    e.preventDefault()
+    const { label } = this.state
+    if (label !== '' && label.trim() !== '') addItem(label)
+    this.setState({ label: '' })
+  }
+
+  inputChangeHandler = (e) => {
+    this.setState({ label: e.target.value })
+  }
+
   render() {
     const { label } = this.state
     const { addItem } = this.props
-    const onSubmidHandler = (e) => {
-      e.preventDefault()
-      if (label !== '') addItem(label)
-      this.setState({ label: '' })
-    }
-
-    const inputChangeHandler = (e) => {
-      this.setState({ label: e.target.value })
-    }
-
     return (
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={onSubmidHandler}>
+        <form onSubmit={(e) => this.onSubmidHandler(e, addItem)}>
           <input
             className="new-todo"
             placeholder="What needs to be done?"
-            onChange={inputChangeHandler}
+            onChange={(e) => this.inputChangeHandler(e)}
             value={label}
           />
         </form>

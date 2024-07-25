@@ -12,28 +12,28 @@ export default class Task extends Component {
     }
   }
 
+  onSubmitHandler = (e) => {
+    e.preventDefault()
+    const { label } = this.state
+    const { changeLabel } = this.props
+    changeLabel(label)
+  }
+
+  inputChangeHandler = (e) => {
+    this.setState({ label: e.target.value })
+  }
+
   render() {
-    const { id, created, onDeleteClick, onEditClick, changeLabel, onCheckClick, completed, editing } = this.props
+    const { id, created, onDeleteClick, onEditClick, onCheckClick, completed, editing } = this.props
     const { label } = this.state
     const timeAgo = formatDistanceToNow(created, { includeSeconds: true })
 
-    const onSubmitHandler = (e) => {
-      e.preventDefault()
-      changeLabel(id, label)
-    }
-
-    const inputChangeHandler = (e) => {
-      this.setState({ label: e.target.value })
-    }
-
     return (
-      <li className={`${completed ? 'completed' : ''} ${editing ? 'editing' : ''}`}>
+      <li className={`${completed && 'completed'} ${editing && 'editing'}`}>
         <div className="view">
-          <input className="toggle" type="checkbox" checked={completed} onChange={onCheckClick} />
-          <label htmlFor="userName">
-            <span id="userName" className="description">
-              {label}
-            </span>
+          <input id={id} className="toggle" type="checkbox" checked={completed} onChange={onCheckClick} />
+          <label htmlFor={id}>
+            <span className="description">{label}</span>
             <span className="created">created{timeAgo} ago</span>
           </label>
           <button type="button" className="icon icon-edit" aria-label="edit" onClick={onEditClick} />
@@ -41,8 +41,8 @@ export default class Task extends Component {
         </div>
 
         {editing && (
-          <form onSubmit={onSubmitHandler}>
-            <input type="text" className="edit" value={label} onChange={inputChangeHandler} />
+          <form onSubmit={(e) => this.onSubmitHandler(e)}>
+            <input type="text" className="edit" value={label} onChange={this.inputChangeHandler} />
           </form>
         )}
       </li>
