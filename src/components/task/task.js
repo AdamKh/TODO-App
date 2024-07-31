@@ -15,10 +15,6 @@ export default class Task extends Component {
     }
   }
 
-  componentDidMount() {
-    this.startTimer()
-  }
-
   componentDidUpdate() {
     const { completed } = this.props
     const { isRunning } = this.state
