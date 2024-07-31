@@ -67,10 +67,9 @@ export default class App extends Component {
     })
   }
 
-  addItem = (label) => {
+  addItem = (label, timerMillisec) => {
     this.setState(({ taskList }) => {
       const key = Math.random().toString(36).slice(2)
-
       const newArr = [
         ...taskList,
         {
@@ -79,6 +78,7 @@ export default class App extends Component {
           onEdit: false,
           id: key,
           created: new Date(),
+          timerMillisec,
         },
       ]
 

@@ -18,6 +18,7 @@ export default function TaskList({ taskList, onDeleteClick, onEditClick, onCheck
           onCheckClick={() => onCheckClick(task.id)}
           completed={task.completed}
           editing={task.onEdit}
+          timerMillisec={task.timerMillisec}
         />
       ))}
     </ul>
