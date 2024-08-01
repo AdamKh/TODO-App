@@ -65,13 +65,13 @@ export default class Task extends Component {
   }
 
   render() {
-    const { id, created, onDeleteClick, onEditClick, onCheckClick, completed, editing } = this.props
+    const { id, created, onDeleteClick, onEditClick, onCheckClick, completed, editing, visible } = this.props
     const { label, timerMillisec } = this.state
     const timeAgo = formatDistanceToNow(created, { includeSeconds: true })
     const timer = format(new Date(timerMillisec), 'mm:ss')
 
     return (
-      <li className={`${completed && 'completed'} ${editing && 'editing'}`}>
+      <li className={`${completed && 'completed'} ${editing && 'editing'} ${!visible && 'hidden'}`}>
         <div className="view">
           <input id={id} className="toggle" type="checkbox" checked={completed} onChange={onCheckClick} />
           <label htmlFor={id}>

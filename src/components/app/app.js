@@ -79,6 +79,7 @@ export default class App extends Component {
           id: key,
           created: new Date(),
           timerMillisec,
+          visible: true,
         },
       ]
 
@@ -104,12 +105,38 @@ export default class App extends Component {
   taskFilter = (filter) => {
     const { taskList } = this.state
     switch (filter) {
-      case 'all':
-        return taskList
-      case 'active':
-        return taskList.filter((item) => !item.completed)
-      case 'completed':
-        return taskList.filter((item) => item.completed)
+      case 'all': {
+        const arr = taskList.map((task) => {
+          const updatedTask = { ...task }
+          updatedTask.visible = true
+          return updatedTask
+        })
+        return arr
+      }
+      case 'active': {
+        const arr = taskList.map((task) => {
+          const updatedTask = { ...task }
+          if (updatedTask.completed) {
+            updatedTask.visible = false
+          } else {
+            updatedTask.visible = true
+          }
+          return updatedTask
+        })
+        return arr
+      }
+      case 'completed': {
+        const arr = taskList.map((task) => {
+          const updatedTask = { ...task }
+          if (!updatedTask.completed) {
+            updatedTask.visible = false
+          } else {
+            updatedTask.visible = true
+          }
+          return updatedTask
+        })
+        return arr
+      }
       default:
         return taskList
     }

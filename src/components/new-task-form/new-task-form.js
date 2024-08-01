@@ -15,9 +15,13 @@ export default class NewTaskForm extends Component {
   onSubmidHandler = (e, addItem) => {
     e.preventDefault()
     const { label, timerMinutes, timerSeconds } = this.state
-    const timerMillisec = (timerMinutes * 60 + timerSeconds) * 1000
-    if (label !== '' && label.trim() !== '') addItem(label, timerMillisec)
-    this.setState({ label: '', timerMinutes: '', timerSeconds: '' })
+    if (timerMinutes < 0 || timerSeconds < 0) {
+      this.setState({ label: '', timerMinutes: '', timerSeconds: '' })
+    } else {
+      const timerMillisec = (timerMinutes * 60 + timerSeconds) * 1000
+      if (label !== '' && label.trim() !== '') addItem(label, timerMillisec)
+      this.setState({ label: '', timerMinutes: '', timerSeconds: '' })
+    }
   }
 
   labelChangeHandler = (e) => {
@@ -25,11 +29,13 @@ export default class NewTaskForm extends Component {
   }
 
   minutesChangeHandler = (e) => {
-    this.setState({ timerMinutes: parseInt(e.target.value, 10) })
+    const minutes = e.target.value
+    this.setState({ timerMinutes: parseInt(minutes, 10) })
   }
 
   secondsChangeHandler = (e) => {
-    this.setState({ timerSeconds: parseInt(e.target.value, 10) })
+    const seconds = e.target.value
+    this.setState({ timerSeconds: parseInt(seconds, 10) })
   }
 
   render() {

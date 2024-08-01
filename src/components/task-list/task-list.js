@@ -19,6 +19,7 @@ export default function TaskList({ taskList, onDeleteClick, onEditClick, onCheck
           completed={task.completed}
           editing={task.onEdit}
           timerMillisec={task.timerMillisec}
+          visible={task.visible}
         />
       ))}
     </ul>
