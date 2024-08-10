@@ -1,75 +1,69 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import './new-task-form.css'
 
-export default class NewTaskForm extends Component {
-  constructor() {
-    super()
-    this.state = {
-      label: '',
-      timerMinutes: null,
-      timerSeconds: null,
-    }
-  }
+export default function NewTaskForm({ addItem }) {
+  const [label, setLabel] = useState('')
+  const [timerMinutes, setTimerMinutes] = useState(null)
+  const [timerSeconds, setTimerSeconds] = useState(null)
 
-  onSubmidHandler = (e, addItem) => {
+  const onSubmidHandler = (e) => {
     e.preventDefault()
-    const { label, timerMinutes, timerSeconds } = this.state
     if (timerMinutes < 0 || timerSeconds < 0) {
-      this.setState({ label: '', timerMinutes: '', timerSeconds: '' })
+      setLabel('')
+      setTimerMinutes('')
+      setTimerSeconds('')
     } else {
       const timerMillisec = (timerMinutes * 60 + timerSeconds) * 1000
       if (label !== '' && label.trim() !== '') addItem(label, timerMillisec)
-      this.setState({ label: '', timerMinutes: '', timerSeconds: '' })
+      setLabel('')
+      setTimerMinutes('')
+      setTimerSeconds('')
     }
   }
 
-  labelChangeHandler = (e) => {
-    this.setState({ label: e.target.value })
+  const labelChangeHandler = (e) => {
+    setLabel(e.target.value)
   }
 
-  minutesChangeHandler = (e) => {
+  const minutesChangeHandler = (e) => {
     const minutes = e.target.value
-    this.setState({ timerMinutes: parseInt(minutes, 10) })
+    setTimerMinutes(parseInt(minutes, 10))
   }
 
-  secondsChangeHandler = (e) => {
+  const secondsChangeHandler = (e) => {
     const seconds = e.target.value
-    this.setState({ timerSeconds: parseInt(seconds, 10) })
+    setTimerSeconds(parseInt(seconds, 10))
   }
 
-  render() {
-    const { label, timerMinutes, timerSeconds } = this.state
-    const { addItem } = this.props
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        <form className="new-todo-form" onSubmit={(e) => this.onSubmidHandler(e, addItem)}>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            onChange={(e) => this.labelChangeHandler(e)}
-            value={label}
-          />
-          <input
-            type="number"
-            className="new-todo-form__timer"
-            placeholder="Min"
-            onChange={(e) => this.minutesChangeHandler(e)}
-            value={timerMinutes}
-          />
-          <input
-            type="number"
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            onChange={(e) => this.secondsChangeHandler(e)}
-            value={timerSeconds}
-          />
-          <button type="submit" aria-label="submit" />
-        </form>
-      </header>
-    )
-  }
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      <form className="new-todo-form" onSubmit={(e) => onSubmidHandler(e)}>
+        <input
+          className="new-todo"
+          placeholder="What needs to be done?"
+          onChange={(e) => labelChangeHandler(e)}
+          value={label}
+        />
+        <input
+          type="number"
+          className="new-todo-form__timer"
+          placeholder="Min"
+          onChange={(e) => minutesChangeHandler(e)}
+          value={timerMinutes}
+        />
+        <input
+          type="number"
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          onChange={(e) => secondsChangeHandler(e)}
+          value={timerSeconds}
+        />
+        <button type="submit" aria-label="submit" />
+      </form>
+    </header>
+  )
 }
 
 NewTaskForm.defaultProps = {
