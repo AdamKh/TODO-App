@@ -1,21 +1,16 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import './app.css'
 
 import NewTaskForm from '../new-task-form'
 import TaskList from '../task-list'
 import Footer from '../footer'
 
-export default class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      taskList: [],
-      filter: 'all',
-    }
-  }
+export default function App() {
+  const [taskListState, setTaskList] = useState([])
+  const [filterState, setFilter] = useState('all')
 
-  onCheckClick = (id) => {
-    this.setState(({ taskList }) => {
+  const onCheckClick = (id) => {
+    setTaskList((taskList) => {
       const idx = taskList.findIndex((task) => task.id === id)
 
       const newArr = [
@@ -24,14 +19,12 @@ export default class App extends Component {
         ...taskList.slice(idx + 1),
       ]
 
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  onEditClick = (id) => {
-    this.setState(({ taskList }) => {
+  const onEditClick = (id) => {
+    setTaskList((taskList) => {
       const idx = taskList.findIndex((task) => task.id === id)
 
       const newArr = [
@@ -40,36 +33,31 @@ export default class App extends Component {
         ...taskList.slice(idx + 1),
       ]
 
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  changeLabel = (id, label) => {
-    this.setState(({ taskList }) => {
+  const changeLabel = (id, label) => {
+    setTaskList((taskList) => {
       const idx = taskList.findIndex((task) => task.id === id)
 
       const newArr = [...taskList.slice(0, idx), { ...taskList[idx], label, onEdit: false }, ...taskList.slice(idx + 1)]
 
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  onClearCompleted = () => {
-    this.setState(({ taskList }) => {
+  const onClearCompleted = () => {
+    setTaskList((taskList) => {
       const newArr = taskList.filter((task) => !task.completed)
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  addItem = (label, timerMillisec) => {
-    this.setState(({ taskList }) => {
+  const addItem = (label, timerMillisec) => {
+    setTaskList((taskList) => {
       const key = Math.random().toString(36).slice(2)
+
       const newArr = [
         ...taskList,
         {
@@ -83,30 +71,25 @@ export default class App extends Component {
         },
       ]
 
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  deleteItem = (id) => {
-    this.setState(({ taskList }) => {
+  const deleteItem = (id) => {
+    setTaskList((taskList) => {
       const newArr = taskList.filter((task) => task.id !== id)
-      return {
-        taskList: newArr,
-      }
+      return newArr
     })
   }
 
-  onFilterChange = (filter) => {
-    this.setState({ filter })
+  const onFilterChange = (filter) => {
+    setFilter(filter)
   }
 
-  taskFilter = (filter) => {
-    const { taskList } = this.state
+  const taskFilter = (filter) => {
     switch (filter) {
       case 'all': {
-        const arr = taskList.map((task) => {
+        const arr = taskListState.map((task) => {
           const updatedTask = { ...task }
           updatedTask.visible = true
           return updatedTask
@@ -114,7 +97,7 @@ export default class App extends Component {
         return arr
       }
       case 'active': {
-        const arr = taskList.map((task) => {
+        const arr = taskListState.map((task) => {
           const updatedTask = { ...task }
           if (updatedTask.completed) {
             updatedTask.visible = false
@@ -126,7 +109,7 @@ export default class App extends Component {
         return arr
       }
       case 'completed': {
-        const arr = taskList.map((task) => {
+        const arr = taskListState.map((task) => {
           const updatedTask = { ...task }
           if (!updatedTask.completed) {
             updatedTask.visible = false
@@ -138,34 +121,31 @@ export default class App extends Component {
         return arr
       }
       default:
-        return taskList
+        return taskListState
     }
   }
 
-  render() {
-    const { taskList, filter } = this.state
-    const taskLeftCount = taskList.filter((task) => !task.completed).length
-    const visibleItems = this.taskFilter(filter)
+  const taskLeftCount = taskListState.filter((task) => !task.completed).length
+  const visibleItems = taskFilter(filterState)
 
-    return (
-      <section className="todoapp">
-        <NewTaskForm addItem={this.addItem} />
-        <section className="main">
-          <TaskList
-            taskList={visibleItems}
-            onDeleteClick={this.deleteItem}
-            onEditClick={this.onEditClick}
-            changeLabel={this.changeLabel}
-            onCheckClick={this.onCheckClick}
-          />
-          <Footer
-            taskLeftCount={taskLeftCount}
-            onClearCompleted={this.onClearCompleted}
-            onFilterChange={this.onFilterChange}
-            filter={filter}
-          />
-        </section>
+  return (
+    <section className="todoapp">
+      <NewTaskForm addItem={addItem} />
+      <section className="main">
+        <TaskList
+          taskList={visibleItems}
+          onDeleteClick={deleteItem}
+          onEditClick={onEditClick}
+          changeLabel={changeLabel}
+          onCheckClick={onCheckClick}
+        />
+        <Footer
+          taskLeftCount={taskLeftCount}
+          onClearCompleted={onClearCompleted}
+          onFilterChange={onFilterChange}
+          filter={filterState}
+        />
       </section>
-    )
-  }
+    </section>
+  )
 }
