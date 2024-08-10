@@ -5,7 +5,7 @@ import './task.css'
 
 export default function Task({
   id,
-  label,
+  label: initialLabel,
   created,
   onDeleteClick,
   onEditClick,
@@ -13,13 +13,13 @@ export default function Task({
   onCheckClick,
   completed,
   editing,
-  timerMillisec,
+  timerMillisec: initialTimerMillisec,
   visible,
 }) {
-  const [labelState, setLabel] = useState(label)
-  const [timerMillisecState, setTimerMillisec] = useState(timerMillisec)
+  const [label, setLabel] = useState(initialLabel)
+  const [timerMillisec, setTimerMillisec] = useState(initialTimerMillisec)
   const [isRunning, setIsRunning] = useState(false)
-  const [msPlus] = useState(timerMillisec ? -1000 : 1000)
+  const msPlus = initialTimerMillisec ? -1000 : 1000
   const intervalIDRef = useRef(null)
 
   const pauseTimer = () => {
@@ -31,8 +31,9 @@ export default function Task({
     if (completed && isRunning) {
       pauseTimer()
     }
-    return () => clearInterval(intervalIDRef.current)
-  }, [completed])
+  }, [completed, isRunning])
+
+  useEffect(() => () => clearInterval(intervalIDRef.current), [])
 
   const updateTimer = (ms) => {
     if (ms < 0) {
@@ -44,7 +45,7 @@ export default function Task({
   }
 
   const startTimer = () => {
-    if (!isRunning && !completed) {
+    if (!isRunning) {
       setIsRunning(true)
       intervalIDRef.current = setInterval(() => {
         setTimerMillisec((prevMs) => {
@@ -58,7 +59,7 @@ export default function Task({
 
   const onSubmitHandler = (e) => {
     e.preventDefault()
-    changeLabel(labelState)
+    changeLabel(label)
   }
 
   const inputChangeHandler = (e) => {
@@ -66,14 +67,14 @@ export default function Task({
   }
 
   const timeAgo = formatDistanceToNow(created, { includeSeconds: true })
-  const timer = format(new Date(timerMillisecState), 'mm:ss')
+  const timer = format(new Date(timerMillisec), 'mm:ss')
 
   return (
     <li className={`${completed && 'completed'} ${editing && 'editing'} ${!visible && 'hidden'}`}>
       <div className="view">
         <input id={id} className="toggle" type="checkbox" checked={completed} onChange={onCheckClick} />
         <label htmlFor={id}>
-          <span className="title">{labelState}</span>
+          <span className="title">{label}</span>
           <span className="description">
             <button type="button" aria-label="start" className="icon icon-play" onClick={startTimer} />
             <button type="button" aria-label="stop" className="icon icon-pause" onClick={pauseTimer} />
@@ -86,8 +87,8 @@ export default function Task({
       </div>
 
       {editing && (
-        <form onSubmit={(e) => onSubmitHandler(e)}>
-          <input type="text" className="edit" value={labelState} onChange={inputChangeHandler} />
+        <form onSubmit={onSubmitHandler}>
+          <input type="text" className="edit" value={label} onChange={inputChangeHandler} />
         </form>
       )}
     </li>
@@ -110,4 +111,9 @@ Task.propTypes = {
   onEditClick: PropTypes.func,
   changeLabel: PropTypes.func,
   onCheckClick: PropTypes.func,
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  created: PropTypes.number.isRequired,
+  timerMillisec: PropTypes.number.isRequired,
+  visible: PropTypes.bool.isRequired,
 }
